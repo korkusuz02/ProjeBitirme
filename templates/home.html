@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <title>TahminSayfamız</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/stylee.css') }}">
+    <style>
+      h1 {
+        color: rgb(41, 114, 124);
+        font-family: verdana;
+        text-align: center;
+        
+      }
+      h5{
+        text-align: left;
+      }
+      h3{
+        color: rgb(140, 21, 67);
+      }
+  </style>
+</head>
+<body>
+  
+    <div class="mb-3 row">
+        <h1>İLACIN HASTA ÜZERİNDE KALICI OLUP OLMADIĞINI TAHMİN ETME</h1><br>
+        <h5>-----------------------------------------------------------------------</h5>
+        <br>
+        <h3>TAHMİN SONUÇLARI</h3>
+        <h5>--------------------------------</h5>
+       {{ result_of_prediction }}  <br>
+       <h5>--------------------------------</h5>
+       <br>
+        <form action="{{ url_for('predict')}}"method="post">
+          <button type="submit" class="btn btn-primary btn-block btn-large">Tahmin et</button><br><br>
+            <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Cinsiyet</label>
+              <select class="form-control" name="gender">
+                <option value="0">Erkek</option>
+                <option value="1">Kadın</option>
+              </select><br>
+            <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Bolge</label>
+              <select class="form-control" name="race">
+                <option value="0">Kafkas</option>
+                <option value="1">Asya</option>
+                <option value="2">Diğer/Bilinmeyen</option>
+                <option value="3">Afrika Amerika</option>
+              </select><br>
+              <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Etnik_Koken</label>
+              <select class="form-control" name="ethnicity">
+                <option value="0">İspanyol olmayan</option>
+                <option value="1">İspanyol</option>
+                <option value="2">Bilinmiyor</option>
+              </select><br>
+              <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Bolge_Konum</label>
+              <select class="form-control" name="region">
+                <option value="0">Batı</option>
+                <option value="1">Orta Batı</option>
+                <option value="2">Güney</option>
+                <option value="3">Diğer/Bilinmeyen</option>
+                <option value="4">Kuzeydoğu</option>
+              </select><br>
+              <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Yas_Kategorisi</label>
+              <select class="form-control" name="age_bucket">
+                <option value="0">>=75</option>
+                <option value="1">55-65</option>
+                <option value="2">65-75</option>
+                <option value="3"><=55</option>
+              </select><br>
+              <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Ntm_Uzmanligi</label>
+              <select class="form-control" name="ntm_speciality">
+                <option value="0">Pratisyen</option>
+                <option value="24">Kardiyoloji</option>
+                <option value="23">Damar ameliyatı</option>
+                <option value="17">Plastic surgery</option>
+                <option value="19">Orthopedics</option>
+                <option value="3">Romatizma</option>
+                <option value="4">Onkoloji</option>
+                <option value="5">Patoloji</option>
+                <option value="6">Doğum ve Jinekoloji</option>
+                <option value="7">Psikiyatri ve Nöroloji</option>
+                <option value="8">Ortopedik Cerrahi</option>
+                <option value="9">Fiziksel tıp ve rehabilitasyon</option>
+                <option value="10">Ameliyat ve Cerrahi</option>
+                <option value="11">Pediatrik</option>
+                <option value="12">Akciğer tıbbı</option>
+                <option value="13">Hematoloji & Onkoloji</option>
+                <option value="14">Üroloji</option>
+                <option value="15">Gastroenterology</option>
+                <option value="16">Nakli ameliyat</option>
+              </select><br>
+              <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Ntm_Uzmanlik_Bayragi</label>
+              <select class="form-control" name="ntm_speciality_flag">
+                <option value="1">Uzman</option>
+                <option value="0">Diğerleri</option>
+              </select><br>
+              <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Ntm_Ozel_Kategorisi</label>
+              <select class="form-control" name="ntm_speciality_bucket">
+                <option value="0">OB/GYN/DİĞERLERİ/PCP/BİLİNMİYOR</option>
+                <option value="1">ENDO/ONC/URO</option>
+              </select><br>
+              <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Gluco_Kaydi_Oncesi_Ntm</label>
+              <select class="form-control" name="Gluco_Record_Prior_Ntm">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Rx_Sirasinda_Gluco_Kaydi</label>
+              <select class="form-control" name="Gluco_Record_During_Rx">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Rx_Sirasinda_Dexa_Frekansi</label>
+              <select class="form-control" name="risk_segment_during">
+                <option value="0">0</option>
+                <option value="1">2</option>
+                <option value="2">7</option>
+                <option value="3">3</option>
+                <option value="4">5</option>
+                <option value="5">20</option>
+                <option value="6">13</option>
+                <option value="7">1</option>
+                <option value="8">6</option>
+                <option value="9">12</option>
+
+              </select><br>
+              <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Rx_Sirasinda_Dexa</label>
+              <select class="form-control" name="Dexa_During_Rx">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Frag_Frac_Oncesi_Ntm</label>
+              <select class="form-control" name="Frag_Frac_Prior_Ntm">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Rx_Sirasinda_Frag_Frac</label>
+              <select class="form-control" name="Frag_Frac_During_Rx">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Segmenti_Oncesi_Ntm</label>
+              <select class="form-control" name="Risk_Segment_Prior_Ntm">
+                <option value="0">VLR_LR</option>
+                <option value="1">HR_VHR</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Tscore_kategorisi_Oncesi_Ntm</label>
+              <select class="form-control" name="Tscore_Bucket_Prior_Ntm">
+                <option value="0">>-2.5</option>
+                <option value="1"><=-2.5</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Rx_Sirasinda_Risk_Segmenti</label>
+              <select class="form-control" name="Risk_Segment_During_Rx">
+                <option value="0">VLR_LR</option>
+                <option value="1">Bilinmiyor</option>
+                <option value="2">HR_VHR</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Rx_Sirasinda_Tscore_Kategorisi</label>
+              <select class="form-control" name="Tscore_Bucket_During_Rx">
+                <option value="0"><=-2.5</option>
+                <option value="1">Bilinmiyor</option>
+                <option value="2">>-2.5</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Tscore_Degisikligi</label>
+              <select class="form-control" name="Change_T_Score">
+                <option value="0">Değişiklik yok</option>
+                <option value="1">Bilinmiyor</option>
+                <option value="2">Kötüleşmiş</option>
+                <option value="3">Gelişmiş</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Segment_Degisikligi</label>
+              <select class="form-control" name="Change_Risk_Segment">
+                <option value="0">Bilinmiyor</option>
+                <option value="1">Değişiklik yok</option>
+                <option value="2">Kötüleşmiş</option>
+                <option value="3">Gelişmiş</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Yapiskan_Bayrak</label>
+              <select class="form-control" name="Adherent_Flag">
+                <option value="0">Yapışık</option>
+                <option value="1">Yapışık-Değil</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Idn_Gostergesi</label>
+              <select class="form-control" name="Idn_Indicator">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Rx_Sirasinda_Enjekte_Edilebilir_Deneyim</label>
+              <select class="form-control" name="Injectable_Experience_During_Rx">
+                <option value="0">Y</option>
+                <option value="1">N</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Malign_Neoplazmalarin_Taranmasi_İcin_Komorb_Karsilasmasi</label>
+              <select class="form-control" name="Comorb_Encounter_For_Screening_For_Malignant_Neoplasms">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Bagisiklama_İcin_Komorb_Karsilasmasi</label>
+              <select class="form-control" name="Comorb_Encounter_For_Immunization">
+                <option value="0">Y</option>
+                <option value="1">N</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Genel_Sinav_Sikayeti_Askiya_Alma_Veya_Raporlanan_Dx_İcin_Komorb_Encntr</label>
+              <select class="form-control" name="Comorb_Encntr_For_General_Exam_W_O_Complaint_Susp_Or_Reprtd_Dx">
+                <option value="0">Y</option>
+                <option value="1">N</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Komorb_D_Vitamini_Eksikligi</label>
+              <select class="form-control" name="Comorb_Vitamin_D_Deficiency">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Komorb_Baska_Yerde_Siniflandirlmamis_Diger_Eklem_Bozuklugu</label>
+              <select class="form-control" name="Comorb_Other_Joint_Disorder_Not_Elsewhere_Classified">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Komorb_Encntr_For_Oth_Sp_Muayene_Sikayeti_Supheli_Veya_Bildirilen_Dx</label>
+              <select class="form-control" name="Comorb_Encntr_For_Oth_Sp_Exam_W_O_Complaint_Suspected_Or_Reprtd_Dx">
+                <option value="0">Y</option>
+                <option value="1">N</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Komorb_Uzun_Sureli_Guncel_İlac_Tedavisi</label>
+              <select class="form-control" name="Comorb_Long_Term_Current_Drug_Therapy">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Komorb_Dorsalji</label>
+              <select class="form-control" name="Comorb_Dorsalgia">
+                <option value="0">Y</option>
+                <option value="1">N</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Komorb_Diger_Hastaliklarin_Ve_Durumlarin_Kisisel_Gecmisi</label>
+              <select class="form-control" name="Comorb_Personal_History_Of_Other_Diseases_And_Conditions">
+                <option value="0">Y</option>
+                <option value="1">N</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Komorb_Kemik_Yogunlugu_Ve_Yapisinin_Diger_Bozukluklarini_Birlestirir</label>
+              <select class="form-control" name="Comorb_Other_Disorders_Of_Bone_Density_And_Structure">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Lipoprotein_Metobolizmasi_Ve_Diger_Lipidemilerin_Komorb_Bozukluklari</label>
+              <select class="form-control" name="Comorb_Disorders_of_lipoprotein_metabolism_and_other_lipidemias">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Mevcut_Patolojik_Kirigi_Olmayan_Komorb_Osteoporoz</label>
+              <select class="form-control" name="Comorb_Osteoporosis_without_current_pathological_fracture">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Komorb_Kisisel_Malign_Neoplazm_Oykusu</label>
+              <select class="form-control" name="Comorb_Personal_history_of_malignant_neoplasm">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Komorb_Gastro_Ozofagus_Reflu_Hastaligi</label>
+              <select class="form-control" name="Comorb_Gastro_esophageal_reflux_disease">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Kolesterol_Ve_Trigliserid_Duzenleyici_Mustahzarlar</label>
+              <select class="form-control" name="Concom_Cholesterol_And_Triglyceride_Regulating_Preparations">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Narkotik</label>
+              <select class="form-control" name="Concom_Narcotics">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Sistemik_Kortikosteroidler_Duz</label>
+              <select class="form-control" name="Concom_Systemic_Corticosteroids_Plain">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Anti_Depresanlar_Ve_Duygudurum_Sabitleyiciler</label>
+              <select class="form-control" name="Concom_Anti_Depressants_And_Mood_Stabilisers">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Florokinolonlar</label>
+              <select class="form-control" name="Concom_Fluoroquinolones">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Sefalosporinler</label>
+              <select class="form-control" name="Concom_Cephalosporins">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Makrolidler_Ve_Benzerleri</label>
+              <select class="form-control" name="Concom_Macrolides_And_Similar_Types">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Genis_Spektrumlu_Penisilinler</label>
+              <select class="form-control" name="Concom_Broad_Spectrum_Penicillins">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Anestezikler_Genel</label>
+              <select class="form-control" name="Concom_Anaesthetics_General">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Concom_Viral_Asilari</label>
+              <select class="form-control" name="Concom_Viral_Vaccines">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Tipi_1_İnsulune_Bagimli_Diyabet</label>
+              <select class="form-control" name="Risk_Type_1_Insulin_Dependent_Diabetes">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Osteogenezis_İmperfekta</label>
+              <select class="form-control" name="Risk_Osteogenesis_Imperfecta">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Romatizma_Toid_Artrit</label>
+              <select class="form-control" name="Risk_Rheumatoid_Arthritis">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Tedavi_Edilmemis_Kronik_Hipertiroidizm</label>
+              <select class="form-control" name="Risk_Untreated_Chronic_Hyperthyroidism">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Tedavi_Edilmemis_Kronik_Hipogonadizm</label>
+              <select class="form-control" name="Risk_Untreated_Chronic_Hypogonadism">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Tedavi_Edilmeyen_Erken_Menopoz_Risk</label>
+              <select class="form-control" name="Risk_Untreated_Early_Menopause">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Riskli_Hasta_Ebeveyn_Kalcasini_Kirdi</label>
+              <select class="form-control" name="Risk_Patient_Parent_Fractured_Their_Hip">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Riskli_Sigara_Tutun</label>
+              <select class="form-control" name="Risk_Smoking_Tobacco">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Kronik_Yetersiz_Beslenme_Veya_Malabsorpsiyon_Riski</label>
+              <select class="form-control" name="Risk_Chronic_Malnutrition_Or_Malabsorption">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Kronik_Karaciger_Hastaligi</label>
+              <select class="form-control" name="Risk_Chronic_Liver_Disease">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Riskli_Ailede_Osteoporoz_Oykusu</label>
+              <select class="form-control" name="Risk_Family_History_Of_Osteoporosis">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Dusuk_Kalsiyum_Alimi_Riski</label>
+              <select class="form-control" name="Risk_Low_Calcium_Intake">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_D_Vitamini_Yetersizligi</label>
+              <select class="form-control" name="Risk_Vitamin_D_Insufficiency">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Kotu_Saglik_Kirilganligi</label>
+              <select class="form-control" name="Risk_Poor_Health_Frailty">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Asiri_İncelik</label>
+              <select class="form-control" name="Risk_Excessive_Thinness">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Histerektomi_Ooferektomi</label>
+              <select class="form-control" name="Risk_Hysterectomy_Oophorectomy">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Ostrojen_Eksikligi</label>
+              <select class="form-control" name="Risk_Estrogen_Deficiency">
+                <option value="0">N</option>
+                <option value="1">P</option>
+                <option value="2">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_İmmobilizasyon</label>
+              <select class="form-control" name="Risk_Immobilization">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Tekrarlayan_Dusme_Riski</label>
+              <select class="form-control" name="Risk_Recurring_Falls">
+                <option value="0">N</option>
+                <option value="1">Y</option>
+              </select><br>
+              <label for="exampleFormControlSelect1"class="col-sm-2 col-form-label">Risk_Sayisi</label>
+              <select class="form-control" name="count_of_risks">
+                <option value="0">0</option>
+                <option value="2">1</option>
+                <option value="1">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+              </select>
+            
+    
+       <br>
+       <br>
+       
+      </form>
+     </div>
+    
+</body>
+</html>
+
